@@ -594,19 +594,37 @@ img {
 }
 
 .case-gallery {
-  display: grid;
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  overflow: hidden;
+}
+
+.case-gallery-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
   padding: 0 var(--space);
-  column-gap: 1.3rem;
-  grid-template-columns: 1.4fr 1fr;
+  will-change: transform;
+}
+
+.case-gallery-type {
+  display: flex;
+  flex: 0 0 auto;
+  width: min(54vw, 680px);
+  align-items: center;
+  margin: 0;
+  font-family: "Noto Kufi Arabic", sans-serif;
+  font-size: clamp(2.25rem, 6.5vw, 6rem);
+  line-height: 1.15;
+  text-align: center;
 }
 
 .case-frame {
+  flex: 0 0 auto;
   min-width: 0;
   margin: 0;
-}
-
-.case-frame--portrait {
-  margin-top: 9rem;
 }
 
 .case-frame img {
@@ -617,10 +635,14 @@ img {
 }
 
 .case-frame--standard {
+  width: min(78vw, 1000px);
+  max-height: 62vh;
   aspect-ratio: 4 / 3;
 }
 
 .case-frame--portrait {
+  width: min(46vw, 580px);
+  max-height: 74vh;
   aspect-ratio: 3 / 4;
 }
 
@@ -628,6 +650,31 @@ img {
   padding-top: 0.7rem;
   font-size: 0.58rem;
   letter-spacing: 0.1em;
+}
+
+.case-gallery--scroll {
+  display: block;
+  height: auto;
+  padding: 4rem 0;
+}
+
+.case-gallery--scroll .case-gallery-track {
+  width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+}
+
+.case-gallery--scroll .case-gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.case-gallery--scroll .case-frame,
+.case-gallery--scroll .case-gallery-type {
+  width: 78vw;
+  max-height: none;
+  scroll-snap-align: center;
 }
 
 .case-credits {
@@ -841,15 +888,6 @@ img {
   .case-body {
     padding-top: 3.5rem;
     padding-bottom: 4rem;
-  }
-
-  .case-gallery {
-    display: block;
-  }
-
-  .case-frame--portrait {
-    width: 78%;
-    margin: 3rem 0 0 auto;
   }
 
   .case-credits {

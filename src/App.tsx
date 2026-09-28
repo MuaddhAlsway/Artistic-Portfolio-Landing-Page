@@ -565,6 +565,66 @@ function PortfolioPage() {
   );
 }
 
+function useHorizontalGallery(scope: RefObject<HTMLElement | null>) {
+  useLayoutEffect(() => {
+    const section = scope.current?.querySelector<HTMLElement>(".case-gallery");
+    const track = scope.current?.querySelector<HTMLElement>(".case-gallery-track");
+    if (!section || !track) return;
+
+    // Reduced motion keeps the gallery reachable as a plain swipeable strip
+    // rather than a pinned, scrubbed pan.
+    if (prefersReducedMotion()) {
+      section.classList.add("case-gallery--scroll");
+      return;
+    }
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 721px)", () => {
+      const frames = section.querySelectorAll(".case-frame");
+      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+      gsap.from(frames, {
+        clipPath: "inset(0 0 100% 0)",
+        duration: 0.9,
+        stagger: 0.12,
+        ease: "power3.inOut",
+        scrollTrigger: { trigger: section, start: "top 70%", once: true },
+      });
+
+      gsap.to(track, {
+        x: () => -distance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${distance()}`,
+          pin: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+
+    mm.add("(max-width: 720px)", () => {
+      section.classList.add("case-gallery--scroll");
+      gsap.from(section.querySelectorAll(".case-frame"), {
+        clipPath: "inset(0 0 100% 0)",
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.inOut",
+        scrollTrigger: { trigger: section, start: "top 80%", once: true },
+      });
+    });
+
+    return () => {
+      mm.revert();
+      section.classList.remove("case-gallery--scroll");
+    };
+  }, [scope]);
+}
+
 function ProjectPage({ project, index }: { project: Project; index: number }) {
   const page = useRef<HTMLDivElement>(null);
   const next = projects[(index + 1) % projects.length];
@@ -572,6 +632,7 @@ function ProjectPage({ project, index }: { project: Project; index: number }) {
   useDocumentTitle(`${project.titleEn} — Three Sisters`);
 
   useImageReveal(page);
+  useHorizontalGallery(page);
 
   useLayoutEffect(() => {
     if (prefersReducedMotion()) return;
@@ -650,14 +711,19 @@ function ProjectPage({ project, index }: { project: Project; index: number }) {
         </div>
 
         <section className="case-gallery" aria-label={`${project.titleEn} gallery`}>
-          <figure className={`case-frame case-frame--${project.gallery[1].ratio} image-reveal`}>
-            <img src={project.gallery[1].image} alt={project.gallery[1].alt} loading="lazy" />
-            <figcaption>{project.gallery[1].caption}</figcaption>
-          </figure>
-          <figure className={`case-frame case-frame--${project.gallery[2].ratio} image-reveal`}>
-            <img src={project.gallery[2].image} alt={project.gallery[2].alt} loading="lazy" />
-            <figcaption>{project.gallery[2].caption}</figcaption>
-          </figure>
+          <div className="case-gallery-track">
+            <figure className="case-frame case-frame--standard">
+              <img src={project.gallery[1].image} alt={project.gallery[1].alt} loading="lazy" />
+              <figcaption>{project.gallery[1].caption}</figcaption>
+            </figure>
+            <p className="case-gallery-type" lang="ar" dir="rtl">
+              {project.titleAr}
+            </p>
+            <figure className="case-frame case-frame--portrait">
+              <img src={project.gallery[2].image} alt={project.gallery[2].alt} loading="lazy" />
+              <figcaption>{project.gallery[2].caption}</figcaption>
+            </figure>
+          </div>
         </section>
 
         <section className="case-credits" aria-label="Credits">
