@@ -672,8 +672,8 @@ img {
 
 .case-gallery--scroll .case-frame,
 .case-gallery--scroll .case-gallery-type {
-  width: 78vw;
-  max-height: none;
+  width: min(78vw, 720px);
+  max-height: 68vh;
   scroll-snap-align: center;
 }
 
