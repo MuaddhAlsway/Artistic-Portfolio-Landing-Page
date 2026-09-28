@@ -387,10 +387,9 @@ function ProjectFigure({
 }) {
   return (
     <article className={`project ${className}`}>
-      <a className="project-image image-reveal" href={`/project/${project.slug}`}>
+      <div className="project-image image-reveal">
         <img src={project.image} alt={project.alt} loading={index > 1 ? "lazy" : "eager"} />
-        <span className="project-view">VIEW PROJECT ↗</span>
-      </a>
+      </div>
       <div className="project-meta">
         <span>{String(index + 1).padStart(2, "0")}</span>
         <span className="project-title">{project.title}</span>
@@ -760,8 +759,8 @@ function NotFoundPage() {
   useDocumentTitle("Not Found — Three Sisters");
 
   return (
-    <div className="project-page">
-      <Header />
+    <div className="portfolio-page">
+      <Header dark />
       <main>
         <section className="portfolio-intro">
           <p className="eyebrow">ERROR — 404</p>
@@ -770,11 +769,11 @@ function NotFoundPage() {
           </div>
           <p className="portfolio-arabic" lang="ar" dir="rtl">غير موجود</p>
         </section>
-        <div className="case-foot">
-          <a href="/portfolio">← ALL PROJECTS</a>
-          <a href="/">← BACK TO HOME</a>
-        </div>
       </main>
+      <div className="portfolio-end">
+        <a href="/portfolio">← ALL PROJECTS</a>
+        <a href="/">← BACK TO HOME</a>
+      </div>
     </div>
   );
 }
@@ -783,19 +782,6 @@ function currentRoute() {
   const path = window.location.pathname.replace(/\/+$/, "") || "/";
   if (path === "/") return { name: "landing" } as const;
   if (path === "/portfolio") return { name: "portfolio" } as const;
-
-  const project = /^(\/project\/([^/]+))$/.exec(path);
-  if (project) {
-    let slug: string;
-    try {
-      slug = decodeURIComponent(project[2]);
-    } catch {
-      return { name: "not-found" } as const;
-    }
-    const index = projects.findIndex((entry) => entry.slug === slug);
-    if (index !== -1) return { name: "project", project: projects[index], index } as const;
-  }
-
   return { name: "not-found" } as const;
 }
 
@@ -803,7 +789,6 @@ export default function App() {
   const route = currentRoute();
 
   if (route.name === "portfolio") return <PortfolioPage />;
-  if (route.name === "project") return <ProjectPage project={route.project} index={route.index} />;
   if (route.name === "not-found") return <NotFoundPage />;
   return <LandingPage />;
 }
