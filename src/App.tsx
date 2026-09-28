@@ -582,7 +582,9 @@ function useHorizontalGallery(scope: RefObject<HTMLElement | null>) {
 
     mm.add("(min-width: 721px)", () => {
       const frames = section.querySelectorAll(".case-frame");
-      const distance = () => Math.max(0, track.scrollWidth - window.innerWidth);
+      // clientWidth is the true content width; innerWidth includes a classic
+      // scrollbar gutter and would over-pan the track.
+      const distance = () => Math.max(0, track.scrollWidth - document.documentElement.clientWidth);
 
       gsap.from(frames, {
         clipPath: "inset(0 0 100% 0)",
