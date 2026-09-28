@@ -1,0 +1,10 @@
+{
+  "description": "Showcase the artistic portfolio of a premium Saudi creative studio with a minimalistic landing page that highlights selected works and clients.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
