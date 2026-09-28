@@ -540,6 +540,10 @@ img {
   grid-template-columns: 1.35fr 1fr;
 }
 
+.case-intro > * {
+  min-width: 0;
+}
+
 .case-standfirst {
   margin: 0;
   text-transform: none;
@@ -597,6 +601,7 @@ img {
 }
 
 .case-frame {
+  min-width: 0;
   margin: 0;
 }
 
