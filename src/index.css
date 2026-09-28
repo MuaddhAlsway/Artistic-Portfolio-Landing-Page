@@ -29,12 +29,16 @@ body {
 }
 
 /* Project details: hide the page scrollbar. The pinned gallery already
-   scrubs the track, so the native indicator is redundant. */
+   scrubs the track, so the native indicator is redundant.
+   Must target the root element -- the viewport scrollbar is not
+   controlled by body. */
+html:has(.project-page),
 body:has(.project-page) {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
+html:has(.project-page)::-webkit-scrollbar,
 body:has(.project-page)::-webkit-scrollbar {
   display: none;
 }
